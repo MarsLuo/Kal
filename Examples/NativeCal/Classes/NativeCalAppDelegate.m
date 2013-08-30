@@ -30,7 +30,7 @@
    *    Kal Configuration
    *
    */
-  kal.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Today" style:UIBarButtonItemStyleBordered target:self action:@selector(showAndSelectToday)] autorelease];
+  kal.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Today" style:UIBarButtonItemStyleBordered target:self action:@selector(showAndSelectToday)];
   kal.delegate = self;
   dataSource = [[EventKitDataSource alloc] init];
   kal.dataSource = dataSource;
@@ -52,7 +52,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   // Display a details screen for the selected event/row.
-  EKEventViewController *vc = [[[EKEventViewController alloc] init] autorelease];
+  EKEventViewController *vc = [[EKEventViewController alloc] init];
   vc.event = [dataSource eventAtIndexPath:indexPath];
   vc.allowsEditing = NO;
   [navController pushViewController:vc animated:YES];
@@ -60,13 +60,5 @@
 
 #pragma mark -
 
-- (void)dealloc
-{
-  [kal release];
-  [dataSource release];
-  [window release];
-  [navController release];
-  [super dealloc];
-}
 
 @end
