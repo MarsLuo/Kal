@@ -81,31 +81,8 @@ static BOOL IsDateBetweenInclusive(NSDate *date, NSDate *begin, NSDate *end)
     NSLog(@"Fetching events from EventKit between %@ and %@ on a GCD-managed background thread...", fromDate, toDate);
     dispatch_async(eventStoreQueue, ^{
         NSDate *fetchProfilerStart = [NSDate date];
-        // Get the appropriate calendar
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-
-        // Create the start date components
-        NSDateComponents *oneDayAgoComponents = [[NSDateComponents alloc] init];
-        oneDayAgoComponents.day = -1;
-        NSDate *oneDayAgo = [calendar dateByAddingComponents:oneDayAgoComponents
-                                                      toDate:[NSDate date]
-                                                     options:0];
-
-        // Create the end date components
-        NSDateComponents *oneYearFromNowComponents = [[NSDateComponents alloc] init];
-        oneYearFromNowComponents.year = 1;
-        NSDate *oneYearFromNow = [calendar dateByAddingComponents:oneYearFromNowComponents
-                                                           toDate:[NSDate date]
-                                                          options:0];
-
-        // Create the predicate from the event store's instance method
-        NSPredicate *predicate = [eventStore predicateForEventsWithStartDate:oneDayAgo
-                                                                     endDate:oneYearFromNow
-                                                                   calendars:nil];
-
-        // Fetch all events that match the predicate
-        NSArray *matchedEvents = [eventStore eventsMatchingPredicate:predicate];
-
+        NSPredicate *predicate = [eventStore predicateForEventsWithStartDate:fromDate endDate:toDate calendars:nil];
+        NSArray *matchedEvents = [eventStore eventsMatchingPredicate:predicate];        // Fetch all events that match the predicate
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"Fetched %d events in %f seconds", [matchedEvents count], -1.f * [fetchProfilerStart timeIntervalSinceNow]);
             [events addObjectsFromArray:matchedEvents];
